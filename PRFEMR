@@ -1,0 +1,61 @@
+#include <SPI.h>
+#include <Wire.h>
+#include <Profflpg _LPG.h>
+#include <Profflpg _SSD1306.h> 
+
+#define OLED_RESET LED_BUILTIN
+Profflpg_SSD1306 display(OLED_RESET);
+
+#define NUMFLAKES 10
+#define XPOS 0
+#define YPOS 1
+#define DELTAY 2
+
+void setup()   {                
+  Serial.begin(9600);
+int sensorPin = A0;
+ 
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3C); 
+
+  display.display();
+  delay(2000);
+  
+}
+ 
+  
+void loop () {
+ // read the value on analog pin 0
+ int lambdaSensor = analogRead (A0);
+ // Convert to voltage
+ float lambdaVoltage = lambdaSensor * (3.3 / 1023.0);
+ // print the voltage value
+ Serial.print("Voltage : ");
+ Serial.println(lambdaVoltage);
+// convert the value to AFR
+ float lambdaAFR = (lambdaVoltage * 2) + 10;
+ // print the AFR value
+ Serial.print("AFR : ");
+ Serial.println(lambdaAFR);
+ Serial.print(" ");
+   display.clearDisplay();
+
+  display.setTextColor(WHITE);
+  display.setTextSize(2);
+  display.setCursor(5,0);
+  display.print("AFR: ");  
+  display.print(lambdaAFR);
+  display.print("");
+display.setTextColor(WHITE);
+  display.setTextSize(2);
+  display.setCursor(5,18);
+  display.print("LV: ");  
+  display.print(lambdaVoltage);
+ display.print(" V");
+
+display.display();
+delay(100);
+  
+  
+  
+  }
+  
